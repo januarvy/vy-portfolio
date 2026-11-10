@@ -1,0 +1,1382 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#e8eef5">
+  <title>— Vy's Portofolio!</title>
+  <style>
+    :root {
+      --sky: #e8eef5;
+      --pink: #ffd1dc;
+      --pink-deep: #f5a9bd;
+      --ink: #292b40;
+      --muted: #73788d;
+      --paper: #fffdfd;
+      --line: #c9cbd6;
+      --shadow: 5px 5px 0 #9da6b6;
+      --pixel: "Courier New", Courier, monospace;
+      --sans: "Trebuchet MS", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      color: var(--ink);
+      font: 14px/1.55 var(--sans);
+      background: var(--sky);
+    }
+    button { color: inherit; font: inherit; }
+    button:focus-visible, a:focus-visible {
+      outline: 3px solid #6c75a8;
+      outline-offset: 3px;
+    }
+    .desktop {
+      position: relative;
+      height: 100dvh;
+      min-height: 570px;
+      overflow: hidden;
+      isolation: isolate;
+      background:
+        linear-gradient(135deg, #fff9 0%, #fff5 100%),
+        url("./assets/desktop-background.png") center / cover no-repeat;
+    }
+    .desktop::before, .desktop::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+      border: 1px solid #ffffffa6;
+      border-radius: 50%;
+    }
+    .desktop::before { width: 430px; height: 430px; right: -120px; top: -160px; }
+    .desktop::after { width: 620px; height: 620px; left: 44%; bottom: -450px; }
+    .desktop-label {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      color: #777d91;
+      font: 11px var(--pixel);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .desktop-icons {
+      position: absolute;
+      top: 30px;
+      left: 24px;
+      display: grid;
+      gap: 16px;
+      z-index: 1;
+    }
+    .desktop-icon {
+      width: 82px;
+      padding: 8px 4px;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: transparent;
+      cursor: pointer;
+      text-align: center;
+      transition: background .18s, transform .18s;
+    }
+    .desktop-icon:hover { background: #ffffff80; transform: translateY(-2px); }
+    .desktop-icon .emoji {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 30px;
+      filter: drop-shadow(2px 3px 0 #aab4c480);
+    }
+    .desktop-icon span:last-child {
+      display: inline-block;
+      padding: 2px 5px;
+      color: #30344b;
+      font-size: 11px;
+      background: #ffffffb8;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    .window {
+      position: absolute;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      width: min(660px, calc(100vw - 42px));
+      max-height: calc(100dvh - 112px);
+      min-height: 300px;
+      overflow: hidden;
+      border: 1px solid #fff;
+      background: var(--paper);
+      box-shadow: var(--shadow), inset 0 0 0 1px #d5d7df;
+      animation: window-in .24s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .window[hidden] { display: none; }
+    .window.minimized { display: none; }
+    .window.home { width: min(690px, calc(100vw - 42px)); }
+    .window.about { width: min(820px, calc(100vw - 42px)); }
+    .window.experience { width: min(920px, calc(100vw - 42px)); }
+    .window.certificates { width: min(780px, calc(100vw - 42px)); }
+    .window.maximized {
+      inset: 12px 12px 58px !important;
+      width: auto !important;
+      max-height: none;
+    }
+    @keyframes window-in {
+      from { opacity: 0; transform: translateY(10px) scale(.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .titlebar {
+      display: flex;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 38px;
+      padding: 5px 7px 5px 12px;
+      color: #33344b;
+      background: linear-gradient(90deg, #ffd1dc, #f8dce8 65%, #e9e3f5);
+      border-bottom: 1px solid #e8b6c4;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+    }
+    .titlebar:active { cursor: grabbing; }
+    .window-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      font: bold 12px var(--pixel);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .titlebar-controls { display: flex; gap: 4px; }
+    .control {
+      display: grid;
+      width: 26px;
+      height: 24px;
+      place-items: center;
+      border: 1px solid #b5a2ac;
+      background: linear-gradient(#fff, #f1e7eb);
+      box-shadow: inset 1px 1px #fff;
+      cursor: pointer;
+      font: bold 13px var(--pixel);
+      line-height: 1;
+    }
+    .control:hover { background: #fff0f4; }
+    .control.close:hover { color: white; background: #d97791; }
+    .menubar {
+      display: flex;
+      gap: 17px;
+      padding: 5px 13px;
+      color: #666b7d;
+      border-bottom: 1px solid #e9e9ed;
+      font: 10px var(--pixel);
+    }
+    .journey-menubar {
+      align-items: center;
+      justify-content: space-between;
+      color: #885a76;
+      background: linear-gradient(90deg, #fff5f8, #eef5fb);
+      font-weight: bold;
+    }
+    .journey-menubar small { color: #838398; font-size: 9px; font-weight: normal; }
+    .window-content {
+      position: relative;
+      flex: 1;
+      overflow: auto;
+      padding: 24px;
+      scrollbar-color: #d6bdc9 #f7f4f6;
+    }
+    .window-content > :not(.folder-stickers) {
+      position: relative;
+      z-index: 2;
+    }
+    .folder-stickers {
+      position: absolute;
+      z-index: 3;
+      inset: 12px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .folder-stickers img {
+      position: absolute;
+      width: 58px;
+      height: auto;
+      opacity: .52;
+      filter: drop-shadow(0 3px 4px #8e789244);
+      animation: sticker-drift 5s ease-in-out infinite;
+    }
+    .folder-stickers .sticker-butterfly { top: 5%; right: 3%; width: 66px; animation-delay: -1s; }
+    .folder-stickers .sticker-heart { top: 30%; right: 2%; width: 43px; animation-delay: -3s; }
+    .folder-stickers .sticker-stars { right: 3%; bottom: 8%; width: 70px; animation-delay: -2s; }
+    .folder-stickers .sticker-bow { top: 6%; right: 17%; width: 39px; animation-delay: -4s; }
+    @keyframes sticker-drift {
+      0%, 100% { transform: translateY(0) rotate(-5deg); }
+      50% { transform: translateY(-9px) rotate(5deg); }
+    }
+    .eyebrow {
+      margin: 0 0 8px;
+      color: #a45e76;
+      font: bold 10px var(--pixel);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 {
+      margin-bottom: 8px;
+      font-size: clamp(29px, 5vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -.05em;
+    }
+    h2 { margin-bottom: 8px; font-size: 20px; letter-spacing: -.03em; }
+    h3 { margin-bottom: 5px; font-size: 14px; }
+    .muted { color: var(--muted); }
+    .home-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 190px;
+      align-items: center;
+      gap: 28px;
+    }
+    .home-copy { min-width: 0; }
+    .profile-eyebrow { text-transform: none; letter-spacing: .05em; }
+    .description-eyebrow { text-transform: none; letter-spacing: .04em; }
+    .welcome-title {
+      display: grid;
+      justify-items: center;
+      margin: 4px 0 15px;
+      text-align: center;
+      line-height: 1.1;
+    }
+    .welcome-intro, .portfolio-word {
+      margin: 0;
+      color: #6b6170;
+      font: italic 18px/1.2 "Segoe Script", "Brush Script MT", cursive;
+    }
+    .welcome-name {
+      margin: 1px 0;
+      color: #bd718a;
+      font: 42px/1.04 "Segoe Script", "Brush Script MT", cursive;
+      letter-spacing: -.055em;
+      overflow-wrap: anywhere;
+    }
+    .portfolio-word { font-size: 23px; }
+    .tagline {
+      margin-bottom: 14px;
+      color: #676b7c;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .tagline-role, .tagline-description { display: block; }
+    .tagline-role { margin-bottom: 4px; font-size: 13px; font-weight: bold; }
+    .quote {
+      margin: 0 0 20px;
+      padding: 11px 14px;
+      border-left: 3px solid #eea8bb;
+      background: #fff3f6;
+      color: #626376;
+      font-size: 12px;
+      font-style: italic;
+    }
+    .profile-card {
+      position: relative;
+      padding: 9px;
+      border: 1px solid #fff;
+      background: linear-gradient(145deg, #fff, #f9eaf0);
+      box-shadow: 4px 5px 0 #d9b8c5, inset 0 0 0 1px #e4d7de;
+      animation: id-card-float 4s ease-in-out infinite;
+      transform-origin: center;
+    }
+    .id-card-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      color: #9c6279;
+      font: bold 8px var(--pixel);
+      letter-spacing: .08em;
+    }
+    .profile-image {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      border: 1px solid #ded5dd;
+      object-fit: cover;
+      object-position: center 24%;
+      background: #e9e9ee;
+    }
+    .profile-caption {
+      margin: 8px 0 0;
+      color: #665c6b;
+      text-align: center;
+      font: bold clamp(4px, .75vw, 8px)/1.4 var(--pixel);
+      letter-spacing: -.08em;
+      white-space: nowrap;
+    }
+    .tagline-symbol { white-space: nowrap; }
+    @keyframes id-card-float {
+      0%, 100% { transform: translateY(0) rotate(1deg); }
+      50% { transform: translateY(-8px) rotate(-1.5deg); }
+    }
+    .button-row { display: flex; flex-wrap: wrap; gap: 9px; }
+    .retro-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 13px;
+      border: 1px solid #c5aab4;
+      background: linear-gradient(#fff, #f5e8ed);
+      box-shadow: 2px 2px 0 #d9c5cd;
+      cursor: pointer;
+      color: inherit;
+      font-size: 11px;
+      text-decoration: none;
+      transition: transform .15s, box-shadow .15s;
+    }
+    .retro-button:hover { transform: translate(1px, 1px); box-shadow: 1px 1px 0 #d9c5cd; }
+    .retro-button.primary { background: var(--pink); border-color: #e9aabc; }
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed #d8d2da;
+    }
+    .section-heading .file-icon { font-size: 28px; }
+    .about-intro {
+      display: grid;
+      grid-template-columns: 170px minmax(0, 1fr);
+      align-items: center;
+      gap: 22px;
+      margin-bottom: 20px;
+    }
+    .about-photo-frame {
+      position: relative;
+      padding: 7px;
+      border: 1px solid #fff;
+      background: linear-gradient(145deg, #dff3fa, #ffe2ed);
+      box-shadow: 0 0 0 2px #a9d8e9, 0 0 0 5px #f4b7ce, 4px 6px 0 #c6b6d2;
+      animation: portrait-float 4.5s ease-in-out infinite;
+    }
+    .about-photo-frame::after {
+      content: "VY / 2027";
+      position: absolute;
+      right: -9px;
+      bottom: 12px;
+      padding: 4px 6px;
+      color: #66516d;
+      background: #fff8fbdc;
+      font: bold 8px var(--pixel);
+      transform: rotate(-5deg);
+    }
+    .about-photo {
+      display: block;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+      object-position: center 27%;
+      border: 1px solid #ffffff;
+    }
+    @keyframes portrait-float {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+    .about-intro-copy h2 { margin: 0 0 10px; }
+    .about-intro-copy p { margin: 0; color: var(--muted); font-size: 13px; }
+    .about-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .info-box {
+      padding: 13px;
+      border: 1px solid #e4dfe5;
+      background: #fffafb;
+    }
+    .info-box.wide { grid-column: 1 / -1; }
+    .info-box h3 { font: bold 10px var(--pixel); color: #a45e76; text-transform: uppercase; }
+    .info-box p { margin: 0; font-size: 12px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+    .chip {
+      padding: 4px 8px;
+      border: 1px solid #e5c4cf;
+      border-radius: 3px;
+      background: #fff1f5;
+      color: #665765;
+      font: 10px var(--pixel);
+    }
+    .timeline { display: grid; gap: 13px; }
+    .journey-eyebrow { text-transform: none; letter-spacing: .04em; }
+    .journey-carousel {
+      overflow: hidden;
+      border: 1px solid #e6dce7;
+      background: #fffafd;
+      box-shadow: 3px 4px 0 #e8d6e0;
+      touch-action: pan-y;
+    }
+    .journey-track {
+      display: flex;
+      transition: transform .48s cubic-bezier(.22,.75,.22,1);
+      will-change: transform;
+    }
+    .journey-slide {
+      display: grid;
+      flex: 0 0 100%;
+      grid-template-columns: minmax(210px, 34%) minmax(0, 1fr);
+      min-height: 302px;
+      overflow: hidden;
+    }
+    .journey-art {
+      position: relative;
+      display: flex;
+      min-height: 302px;
+      align-items: flex-end;
+      overflow: hidden;
+      padding: 18px;
+      background: linear-gradient(145deg, #cce5f1, #f8d3e2);
+      color: #fff;
+    }
+    .journey-art::after {
+      position: absolute;
+      inset: 20% 0 0;
+      background: linear-gradient(transparent, #25233cba);
+      content: "";
+    }
+    .journey-art img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .7s ease;
+    }
+    .journey-slide:hover .journey-art img { transform: scale(1.05); }
+    .journey-art-label {
+      position: relative;
+      z-index: 1;
+      font: bold 10px var(--pixel);
+      letter-spacing: .12em;
+      text-shadow: 0 2px 6px #29233d;
+    }
+    .journey-slide:nth-child(2) .journey-art { background: linear-gradient(145deg, #cce5f1, #c5b4da); }
+    .journey-slide:nth-child(3) .journey-art { background: linear-gradient(145deg, #f8d2df, #d5e7f2); }
+    .journey-slide:nth-child(4) .journey-art { background: linear-gradient(145deg, #d5e8f4, #f5c9db); }
+    .journey-art--pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; padding: 8px; }
+    .journey-art--pair img {
+      position: relative;
+      inset: auto;
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      object-fit: cover;
+      border: 2px solid #fff9;
+      box-shadow: 2px 2px 0 #755e7188;
+    }
+    .journey-copy {
+      min-width: 0;
+      padding: 22px 24px;
+      background:
+        radial-gradient(circle at 100% 0, #f7dce8a8 0 15%, transparent 16%),
+        linear-gradient(135deg, #fffefe, #f7f8fd);
+    }
+    .journey-slide:nth-child(2) .journey-copy { background: linear-gradient(135deg, #fffafb, #edf5fb); }
+    .journey-slide:nth-child(3) .journey-copy { background: linear-gradient(135deg, #fffafa, #f3edfa); }
+    .journey-slide:nth-child(4) .journey-copy { background: linear-gradient(135deg, #f8fbff, #fff0f5); }
+    .journey-kicker {
+      margin: 0 0 7px;
+      color: #a45e76;
+      font: bold 10px var(--pixel);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .journey-copy h3 {
+      margin: 0 0 13px;
+      color: #34354c;
+      font-size: clamp(17px, 2vw, 22px);
+      line-height: 1.25;
+    }
+    .journey-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .journey-list li {
+      position: relative;
+      padding-left: 18px;
+      color: #606477;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .journey-list li::before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: #c97e9b;
+      content: "✦";
+      font-size: 11px;
+    }
+    .journey-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 12px 0 23px;
+    }
+    .journey-arrows, .journey-dots { display: flex; align-items: center; gap: 7px; }
+    .journey-arrow, .journey-dot {
+      display: grid;
+      place-items: center;
+      border: 1px solid #ddc5d1;
+      background: linear-gradient(#fff, #f7eaf0);
+      box-shadow: 2px 2px 0 #dfd1dc;
+      cursor: pointer;
+    }
+    .journey-arrow { width: 33px; height: 30px; font-weight: bold; }
+    .journey-arrow:hover, .journey-dot:hover { background: #fbdce6; }
+    .journey-dot { width: 9px; height: 9px; padding: 0; border-radius: 50%; }
+    .journey-dot[aria-current="true"] { width: 23px; border-radius: 8px; background: #d78da7; }
+    .journey-count { color: #858195; font: 10px var(--pixel); }
+    .gallery-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 11px;
+    }
+    .gallery-heading h3 { margin: 0; font-size: 16px; }
+    .gallery-heading small { color: #818196; font-size: 10px; }
+    .photo-rail {
+      display: grid;
+      grid-auto-columns: clamp(145px, 22vw, 190px);
+      grid-auto-flow: column;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 4px 4px 14px;
+      scroll-snap-type: x mandatory;
+      scrollbar-color: #dfb9ca #f8f2f6;
+    }
+    .photo-card {
+      position: relative;
+      min-width: 0;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border: 1px solid #fff;
+      background: linear-gradient(145deg, #cce5f1, #f8d3e2);
+      box-shadow: 3px 4px 0 #ddc8d7;
+      scroll-snap-align: start;
+      isolation: isolate;
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .photo-card:hover { z-index: 2; transform: translateY(-5px) scale(1.02); box-shadow: 4px 7px 0 #d9b3c5; }
+    .photo-card > img, .photo-pair img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .55s ease;
+    }
+    .photo-card:hover > img, .photo-card:hover .photo-pair img { transform: scale(1.06); }
+    .photo-card::after {
+      position: absolute;
+      z-index: 1;
+      inset: 35% 0 0;
+      background: linear-gradient(transparent, #272338dc);
+      content: "";
+      pointer-events: none;
+    }
+    .photo-pair { display: grid; width: 100%; height: 100%; grid-template-columns: 1fr 1fr; gap: 2px; }
+    .photo-label {
+      position: absolute;
+      z-index: 2;
+      right: 10px;
+      bottom: 11px;
+      left: 10px;
+      color: #fff;
+      font: bold 9px var(--pixel);
+      letter-spacing: .04em;
+      text-shadow: 0 1px 5px #171525;
+    }
+    .gallery-badge {
+      position: absolute;
+      z-index: 2;
+      top: 9px;
+      left: 9px;
+      padding: 4px 6px;
+      color: #55485e;
+      border: 1px solid #fff9;
+      background: #fff9;
+      font: bold 8px var(--pixel);
+    }
+    .journey-art img, .photo-card img, .certificate-art img { cursor: zoom-in; }
+    .journey-art img:focus-visible, .photo-card img:focus-visible, .certificate-art img:focus-visible {
+      outline: 3px solid #6c75a8;
+      outline-offset: -4px;
+    }
+    .image-viewer {
+      position: fixed;
+      width: min(94vw, 1100px);
+      max-width: none;
+      max-height: 94dvh;
+      padding: 14px;
+      overflow: hidden;
+      border: 1px solid #fff;
+      background: #fffafd;
+      box-shadow: 6px 6px 0 #9da6b6;
+      color: var(--ink);
+    }
+    .image-viewer::backdrop { background: #1e2039c9; backdrop-filter: blur(4px); }
+    .image-viewer img {
+      display: block;
+      width: 100%;
+      max-height: calc(94dvh - 78px);
+      object-fit: contain;
+      background: #e8eef5;
+    }
+    .image-viewer p { margin: 10px 42px 0 0; color: #606477; font-size: 12px; }
+    .image-viewer-close {
+      position: absolute;
+      z-index: 1;
+      top: 18px;
+      right: 18px;
+      width: 34px;
+      height: 34px;
+      border: 1px solid #d5bdc9;
+      background: #fffafd;
+      box-shadow: 2px 2px 0 #d9c8d3;
+      cursor: pointer;
+      font-size: 22px;
+      line-height: 1;
+    }
+    .experience-card {
+      display: grid;
+      grid-template-columns: 128px 1fr;
+      gap: 16px;
+      padding: 12px;
+      border: 1px solid #e5e0e6;
+      background: #fffafb;
+    }
+    .event-image {
+      display: grid;
+      min-height: 105px;
+      place-items: center;
+      overflow: hidden;
+      background: linear-gradient(145deg, #dce5f2, #f8dce7);
+      font-size: 34px;
+    }
+    .event-image img { width: 100%; height: 100%; min-height: 125px; object-fit: cover; }
+    .date { margin-bottom: 5px; color: #a45e76; font: 10px var(--pixel); }
+    .experience-card p { margin: 0; color: #73788a; font-size: 12px; }
+    .certificate-grid {
+      display: grid;
+      grid-auto-columns: clamp(190px, 24vw, 235px);
+      grid-auto-flow: column;
+      gap: 15px;
+      overflow-x: auto;
+      padding: 5px 5px 18px;
+      scroll-snap-type: x mandatory;
+      scrollbar-color: #dfb9ca #f8f2f6;
+    }
+    .certificate {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 280px;
+      padding: 0 0 13px;
+      overflow: hidden;
+      border: 1px solid #fff;
+      background: #fbfafc;
+      box-shadow: 3px 4px 0 #e0d5db;
+      cursor: pointer;
+      text-align: left;
+      scroll-snap-align: start;
+      isolation: isolate;
+      transition: transform .22s, box-shadow .22s;
+    }
+    .certificate:hover { z-index: 1; transform: translateY(-5px) scale(1.02); box-shadow: 4px 7px 0 #dfc7d2; }
+    .certificate-art {
+      position: relative;
+      display: flex;
+      min-height: 185px;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: 5px;
+      margin-bottom: 11px;
+      padding: 12px;
+      overflow: hidden;
+      background: linear-gradient(145deg, #cce5f1, #f8d3e2);
+      color: #fff;
+      text-shadow: 0 1px 5px #171525;
+    }
+    .certificate-art::after {
+      position: absolute;
+      inset: 20% 0 0;
+      background: linear-gradient(transparent, #272338dc);
+      content: "";
+      pointer-events: none;
+    }
+    .certificate-art img {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .5s ease;
+    }
+    .certificate:hover .certificate-art img { transform: scale(1.07); }
+    .certificate-number, .certificate-type { position: relative; z-index: 2; }
+    .certificate-number { font: bold 9px var(--pixel); letter-spacing: .12em; }
+    .certificate-type { font-size: 11px; font-weight: bold; }
+    .certificate strong, .certificate small { display: block; margin-right: 12px; margin-left: 12px; }
+    .certificate strong { margin-bottom: 5px; font-size: 12px; line-height: 1.4; }
+    .certificate small { margin-top: auto; color: #7a7d8d; font-size: 10px; }
+
+    .taskbar {
+      position: absolute;
+      z-index: 20;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      height: 46px;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 8px;
+      border-top: 1px solid #fff;
+      background: #e8e8ed;
+      box-shadow: 0 -2px 7px #6971851c, inset 0 1px #fff;
+    }
+    .start-button {
+      display: flex;
+      height: 33px;
+      align-items: center;
+      gap: 7px;
+      padding: 0 12px;
+      border: 1px solid #aeb1bd;
+      background: linear-gradient(#fff, #e7e5ed);
+      box-shadow: 2px 2px 0 #a9a9b5;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .start-button .start-mark { color: #ca7790; font-size: 17px; }
+    .task-items { display: flex; flex: 1; gap: 6px; overflow-x: auto; }
+    .task-item {
+      flex: 0 0 max-content;
+      min-width: 90px;
+      max-width: 230px;
+      height: 32px;
+      overflow: hidden;
+      padding: 4px 10px;
+      border: 1px solid #c9c8d1;
+      background: #f6f5f8;
+      cursor: pointer;
+      text-align: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font: 10px var(--pixel);
+    }
+    .task-item.active { background: #fff; box-shadow: inset 1px 1px #bbb; }
+    .system-tray {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      padding: 0 8px;
+      color: #626577;
+      font-size: 11px;
+    }
+    .start-menu {
+      position: absolute;
+      z-index: 30;
+      bottom: 51px;
+      left: 8px;
+      width: 245px;
+      padding: 9px;
+      border: 1px solid #fff;
+      background: #f8f5f7;
+      box-shadow: 4px 4px 0 #999eac;
+      animation: window-in .16s ease both;
+    }
+    .start-menu[hidden] { display: none; }
+    .start-banner {
+      margin: -9px -9px 8px;
+      padding: 13px 12px;
+      color: #574654;
+      background: linear-gradient(100deg, #ffd1dc, #e9e3f5);
+      font: bold 12px var(--pixel);
+    }
+    .menu-entry {
+      display: flex;
+      width: 100%;
+      gap: 10px;
+      padding: 8px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      text-align: left;
+    }
+    .menu-entry:hover { background: #fbe4eb; }
+    .menu-entry span:first-child { font-size: 18px; }
+    .menu-entry small { display: block; color: #858494; }
+    .toast {
+      position: absolute;
+      z-index: 40;
+      right: 16px;
+      bottom: 58px;
+      padding: 10px 14px;
+      border: 1px solid #fff;
+      background: #fffafb;
+      box-shadow: 3px 3px 0 #a9aab6;
+      animation: window-in .2s ease both;
+    }
+    .toast[hidden] { display: none; }
+    @media (max-width: 640px) {
+      .desktop { min-height: 510px; }
+      .desktop-label { top: 7px; right: 10px; font-size: 8px; }
+      .desktop-icons {
+        top: 31px;
+        right: 8px;
+        left: 8px;
+        display: grid;
+        grid-auto-columns: max-content;
+        grid-auto-flow: column;
+        grid-template-columns: none;
+        gap: 2px;
+        overflow-x: auto;
+        padding: 0 2px 5px;
+        scrollbar-width: none;
+      }
+      .desktop-icons::-webkit-scrollbar { display: none; }
+      .desktop-icon { width: max-content; min-width: 56px; padding: 4px 7px; }
+      .desktop-icon .emoji { font-size: 23px; }
+      .desktop-icon span:last-child { padding: 2px 3px; font-size: 8px; }
+      .window { top: 86px !important; left: 10px !important; width: calc(100vw - 20px) !important; max-height: calc(100dvh - 151px); min-height: 250px; }
+      .window.maximized { inset: 8px 8px 55px !important; }
+      .window-content { padding: 17px; }
+      .window.experience { max-height: calc(100dvh - 151px); }
+      .image-viewer { padding: 8px; }
+      .image-viewer img { max-height: calc(94dvh - 64px); }
+      .image-viewer-close { top: 12px; right: 12px; }
+      .journey-menubar { gap: 6px; padding: 6px 9px; font-size: 9px; }
+      .journey-menubar small { font-size: 8px; }
+      .journey-slide { grid-template-columns: 108px minmax(0, 1fr); min-height: 340px; }
+      .journey-art { min-height: 340px; padding: 10px; }
+      .journey-art-label { font-size: 8px; }
+      .journey-copy { padding: 15px 12px; }
+      .journey-kicker { font-size: 8px; }
+      .journey-copy h3 { margin-bottom: 10px; font-size: 16px; }
+      .journey-list { gap: 7px; }
+      .journey-list li { padding-left: 14px; font-size: 10px; line-height: 1.4; }
+      .journey-controls { gap: 6px; margin-bottom: 19px; }
+      .journey-arrows, .journey-dots { gap: 5px; }
+      .journey-count { font-size: 8px; }
+      .journey-arrow { width: 29px; height: 28px; }
+      .gallery-heading h3 { font-size: 14px; }
+      .gallery-heading small { font-size: 9px; }
+      .photo-rail { grid-auto-columns: 155px; gap: 9px; }
+      .about-intro { grid-template-columns: 115px minmax(0, 1fr); gap: 14px; }
+      .about-photo-frame { padding: 5px; }
+      .about-intro-copy p { font-size: 12px; }
+      .info-box { padding: 10px; }
+      .folder-stickers { inset: 8px; }
+      .folder-stickers .sticker-butterfly { width: 48px; }
+      .folder-stickers .sticker-heart { width: 32px; }
+      .folder-stickers .sticker-stars { width: 52px; }
+      .folder-stickers .sticker-bow { width: 29px; }
+      .folder-stickers img { opacity: .3; }
+      .home-layout { grid-template-columns: minmax(0, 1fr) 125px; gap: 12px; }
+      .profile-card { padding: 7px; }
+      .id-card-header { font-size: 7px; }
+      .welcome-name { font-size: clamp(28px, 7vw, 38px); }
+      .welcome-intro { font-size: 16px; }
+      .portfolio-word { font-size: 20px; }
+      .quote { font-size: 11px; }
+      .about-grid { grid-template-columns: 1fr; gap: 8px; }
+      .experience-card { grid-template-columns: 82px 1fr; gap: 10px; padding: 9px; }
+      .event-image { min-height: 85px; font-size: 26px; }
+      .certificate-grid { grid-auto-columns: min(72vw, 230px); gap: 11px; }
+      .certificate { min-height: 250px; }
+      .certificate-art { min-height: 160px; }
+      .taskbar { gap: 6px; padding: 5px; }
+      .start-button { padding: 0 8px; font-size: 11px; }
+      .task-item { min-width: 70px; padding: 4px 6px; font-size: 9px; }
+      .system-tray { gap: 5px; padding: 0 4px; font-size: 10px; }
+    }
+    @media (max-width: 390px) {
+      .home-layout { grid-template-columns: minmax(0, 1fr) 92px; gap: 9px; }
+      .profile-card { padding: 5px; }
+      .id-card-header { font-size: 6px; }
+      .welcome-name { font-size: 26px; }
+      .welcome-intro { font-size: 14px; }
+      .portfolio-word { font-size: 18px; }
+      .tagline-role { font-size: 11px; }
+      .tagline { font-size: 11px; }
+      .about-intro { grid-template-columns: 88px minmax(0, 1fr); gap: 11px; }
+      .about-intro-copy h2 { font-size: 17px; }
+      .about-intro-copy p { font-size: 11px; }
+      .about-grid { grid-template-columns: 1fr; gap: 8px; }
+      .info-box.wide { grid-column: auto; }
+      .system-tray .wifi { display: none; }
+      .task-item { min-width: 58px; max-width: 160px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="desktop" aria-label="Desktop portofolio interaktif">
+    <div class="desktop-label">personal portfolio · v2.026</div>
+
+    <nav class="desktop-icons" aria-label="Aplikasi desktop">
+      <button class="desktop-icon" data-open="home"><span class="emoji">💾</span><span>⋮ 𝓦𝓮𝓵𝓬𝓸𝓶𝓮</span></button>
+      <button class="desktop-icon" data-open="about"><span class="emoji">📁</span><span>⋮ 𝓦𝓱𝓸'𝓼 𝓥𝔂?</span></button>
+      <button class="desktop-icon" data-open="experience"><span class="emoji">🖥️</span><span>⋮ 𝓥𝔂'𝓼 𝓔𝔁𝓹𝓮𝓻𝓲𝓮𝓷𝓬𝓮</span></button>
+      <button class="desktop-icon" data-open="certificates"><span class="emoji">🏆</span><span>⋮ 𝓥𝔂'𝓼 𝓐𝓬𝓱𝓲𝓮𝓿𝓮𝓶𝓮𝓷𝓽</span></button>
+    </nav>
+
+    <section class="window home" id="window-home" data-title="⋮ 𝓦𝓮𝓵𝓬𝓸𝓶𝓮" style="top: 12%; left: 22%;" aria-label="Jendela Home">
+      <header class="titlebar">
+        <div class="window-title">⋮ 𝓦𝓮𝓵𝓬𝓸𝓶𝓮</div>
+        <div class="titlebar-controls">
+          <button class="control minimize" aria-label="Minimalkan">_</button>
+          <button class="control maximize" aria-label="Maksimalkan">□</button>
+          <button class="control close" aria-label="Tutup">×</button>
+        </div>
+      </header>
+      <div class="menubar"><span>File</span><span>Edit</span><span>View</span><span>Help</span></div>
+      <div class="window-content">
+        <div class="folder-stickers" aria-hidden="true">
+          <img class="sticker-butterfly" src="./assets/butterfly.png" alt="">
+          <img class="sticker-heart" src="./assets/fingerprint-heart.png" alt="">
+          <img class="sticker-stars" src="./assets/floating-stars.png" alt="">
+          <img class="sticker-bow" src="./assets/star-bow.png" alt="">
+        </div>
+        <div class="home-layout">
+          <div class="home-copy">
+            <p class="eyebrow profile-eyebrow">✦ vy's profile</p>
+            <div class="welcome-title" role="heading" aria-level="1" aria-label="Welcome to Gavrila Putri Polean's Portofolio">
+              <span class="welcome-intro">Welcome to</span>
+              <span class="welcome-name">Gavrila Putri<br>Polean's</span>
+              <span class="portfolio-word">Portofolio</span>
+            </div>
+            <p class="tagline">
+              <span class="tagline-role">Software Engineering Student ⭑ Dancer ⭑ Taekwondo Black Belt</span>
+              <span class="tagline-description">Coding Logic by Day, Hitting Kicks and Choreography by Night <span class="tagline-symbol">ദ്ദി◝ ⩊ ◜.ᐟ</span></span>
+            </p>
+            <blockquote class="quote">Do what you can, With what you have, Where you are<br>— Theodore Roosevelt</blockquote>
+            <div class="button-row">
+              <button class="retro-button primary" data-open="about">಄. about vy's</button>
+              <a class="retro-button" href="https://www.instagram.com/theseanvy_" target="_blank" rel="noopener noreferrer">say hello!</a>
+            </div>
+          </div>
+          <div class="profile-card" aria-label="Kartu identitas Gavrila">
+            <div class="id-card-header"><span>✦ vy's pretty pict</span></div>
+            <img class="profile-image" src="./assets/vy-profile.jpe" alt="Gavrila mengenakan dobok taekwondo">
+            <p class="profile-caption">⋆ ｡‧˚ʚ GAVRILA PUTRI POLEAN ɞ˚‧｡ ⋆</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="window about" id="window-about" data-title="⋮ 𝓦𝓱𝓸'𝓼 𝓥𝔂?" style="top: 15%; left: 32%;" hidden aria-label="Jendela Who's Vy">
+      <header class="titlebar">
+        <div class="window-title"><span>📁</span> ⋮ 𝓦𝓱𝓸'𝓼 𝓥𝔂?</div>
+        <div class="titlebar-controls">
+          <button class="control minimize" aria-label="Minimalkan">_</button>
+          <button class="control maximize" aria-label="Maksimalkan">□</button>
+          <button class="control close" aria-label="Tutup">×</button>
+        </div>
+      </header>
+      <div class="menubar"><span>File</span><span>Edit</span><span>Format</span><span>Help</span></div>
+      <div class="window-content">
+        <div class="folder-stickers" aria-hidden="true">
+          <img class="sticker-butterfly" src="./assets/butterfly.png" alt="">
+          <img class="sticker-heart" src="./assets/fingerprint-heart.png" alt="">
+          <img class="sticker-stars" src="./assets/floating-stars.png" alt="">
+          <img class="sticker-bow" src="./assets/star-bow.png" alt="">
+        </div>
+        <div class="about-intro">
+          <div class="about-photo-frame"><img class="about-photo" src="./assets/vy-about-portrait.png" alt="Foto Gavrila mengenakan dobok taekwondo"></div>
+          <div class="about-intro-copy">
+            <p class="eyebrow description-eyebrow">✦ vy's descriptions</p>
+            <h2>── Logic Meets Creativity, and Discipline.</h2>
+            <p>HelloOow! I'm ୨ Gavrila Putri Polean ୧, but you can call me ୨ Gavy or Vy ୧. I'm a 2027 fresh graduate from SMK Negeri 1 Karawang.. I'm also a Dancer, as well as a Taekwondo BlackBelt and a Coach.</p>
+          </div>
+        </div>
+        <div class="about-grid">
+          <article class="info-box"><h3>01 / Education</h3><p>2024-2027 | SMK Negeri 1 Karawang as Software Engineering Student.</p></article>
+          <article class="info-box"><h3>02 / Dance</h3><p>2018-Now | I taught myself how to dance, and now I’m even able to serve as an coach for performances.</p></article>
+          <article class="info-box wide"><h3>03 / Taekwondo Black Belt</h3><p>2021-Now | I began my taekwondo training at a Dojang (training center/club) in my hometown. I progressed through the rank from a white belt all the way to a black belt, which I earned in December 2025, and I am now a Taekwondo Coach, teaching younger students across various schools and age groups (including classes for babies and toddlers).</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="window experience" id="window-experience" data-title="⋮ 𝓥𝔂'𝓼 𝓔𝔁𝓹𝓮𝓻𝓲𝓮𝓷𝓬𝓮" style="top: 8%; left: 17%;" hidden aria-label="Jendela Vy's Experience">
+      <header class="titlebar">
+        <div class="window-title"><span>🖥️</span> ⋮ 𝓥𝔂'𝓼 𝓔𝔁𝓹𝓮𝓻𝓲𝓮𝓷𝓬𝓮</div>
+        <div class="titlebar-controls">
+          <button class="control minimize" aria-label="Minimalkan">_</button>
+          <button class="control maximize" aria-label="Maksimalkan">□</button>
+          <button class="control close" aria-label="Tutup">×</button>
+        </div>
+      </header>
+      <div class="menubar journey-menubar"><span>✦ vy's pict journey here!</span><small>PERSONAL GALLERY · 05 PHOTOS</small></div>
+      <div class="window-content">
+        <div class="folder-stickers" aria-hidden="true">
+          <img class="sticker-butterfly" src="./assets/butterfly.png" alt="">
+          <img class="sticker-heart" src="./assets/fingerprint-heart.png" alt="">
+          <img class="sticker-stars" src="./assets/floating-stars.png" alt="">
+          <img class="sticker-bow" src="./assets/star-bow.png" alt="">
+        </div>
+        <div class="section-heading"><span class="file-icon">🗺️</span><div><p class="eyebrow journey-eyebrow">✦ vy's journey</p><h2>Little moments, big milestones</h2></div></div>
+        <div class="journey-carousel" id="journey-carousel" aria-label="Experience slides">
+          <div class="journey-track" id="journey-track">
+            <article class="journey-slide" aria-label="Slide 1: Dance" aria-hidden="false">
+              <div class="journey-art"><img src="./assets/journey-dance.png" alt="Kolase momen penampilan dan penghargaan dance Vy" data-viewer-caption="˚ʚ Dance ɞ˚"><span class="journey-art-label">MOVE WITH HEART</span></div>
+              <div class="journey-copy"><p class="journey-kicker">01 / 04 · 2018 — NOW</p><h3>˚ʚ Dance ɞ˚</h3>
+                <ul class="journey-list">
+                  <li>2nd Place Jingle Dance Competition (December, 2024)</li>
+                  <li>Dance division Executive and Trainer in the Dance Extracurricular (2024 - 2027)</li>
+                  <li>Active Participants in the Tokseoul Wave 2024 Competition (October, 2024)</li>
+                  <li>Performance in school events (2024 - Now)</li>
+                </ul>
+              </div>
+            </article>
+            <article class="journey-slide" aria-label="Slide 2: Taekwondo Athlete" aria-hidden="true" inert>
+              <div class="journey-art"><img src="./assets/journey-taekwondo.png" alt="Kolase latihan, ujian sabuk hitam, dan kompetisi taekwondo" data-viewer-caption="˚ʚ Taekwondo Athlete ɞ˚"><span class="journey-art-label">DISCIPLINE IN MOTION</span></div>
+              <div class="journey-copy"><p class="journey-kicker">02 / 04 · 2021 — NOW</p><h3>˚ʚ Taekwondo Athlete ɞ˚</h3>
+                <ul class="journey-list">
+                  <li>1st Place in the Female Cadet Individual Poomsae at the 5th Liga Persada Taekwondo Championship (December, 2023)</li>
+                  <li>2nd Place in the Female Cadet Individual Poomsae at the 4th Liga Persada Taekwondo Championship (March, 2023)</li>
+                  <li>Completed Kukkiwon's 1st Dan Taekwondo Promotion Test (December, 2025)</li>
+                  <li>Taekwondo Extracurricular &amp; Dojang Executive &amp; Coach (2023 - Now)</li>
+                </ul>
+              </div>
+            </article>
+            <article class="journey-slide" aria-label="Slide 3: Software Engineering Student" aria-hidden="true" inert>
+              <div class="journey-art"><img src="./assets/journey-software.png" alt="Foto formal Vy sebagai siswi SMK Negeri 1 Karawang" data-viewer-caption="˚ʚ Software Engineering Student ɞ˚"><span class="journey-art-label">CURIOUS BY DESIGN</span></div>
+              <div class="journey-copy"><p class="journey-kicker">03 / 04 · 2024 — 2027</p><h3>˚ʚ Software Engineering Student ɞ˚</h3>
+                <ul class="journey-list">
+                  <li>Gold Medal Winner at the national English Language Olympiad — FOSNAS (August, 2026)</li>
+                  <li>Gold Medal Winner at the national Informatics Olympiad — FOSNAS (August, 2026)</li>
+                  <li>Basic Digital Marketing Training — GANTAR (September, 2025)</li>
+                  <li>AI Ready Asean Hour of Code Training — ASEAN Foundation &amp; <a href="https://Google.org" target="_blank" rel="noopener noreferrer">Google.org</a></li>
+                  <li>Gemini Certified Student (October, 2026)</li>
+                </ul>
+              </div>
+            </article>
+            <article class="journey-slide" aria-label="Slide 4: Internship Program" aria-hidden="true" inert>
+              <div class="journey-art journey-art--pair"><img src="./assets/journey-internship-nipro.png" alt="Vy menjalani kegiatan magang di bagian produksi Nipro" data-viewer-caption="˚ʚ Internship Program ɞ˚"><img src="./assets/journey-internship-sagasitas.png" alt="Vy berpartisipasi dalam program AI dan Guinness World Records" data-viewer-caption="˚ʚ Internship Program ɞ˚"><span class="journey-art-label">LEARNING OUT THERE</span></div>
+              <div class="journey-copy"><p class="journey-kicker">04 / 04 · 2025 — 2026</p><h3>˚ʚ Internship Program ɞ˚</h3>
+                <ul class="journey-list">
+                  <li>Internship at the Yayasan Sagasitas Indonesia, teaching about AI &amp; cloud computing, in preparation &amp; participation in the Guinness World Records (October 2025 - January 2026)</li>
+                  <li>Internship at PT Nipro Indonesia Jaya, in the Production 1 (Engineering &amp; Document Control), (March - June 2026)</li>
+                </ul>
+              </div>
+            </article>
+          </div>
+        </div>
+        <nav class="journey-controls" aria-label="Journey slide controls">
+          <div class="journey-arrows">
+            <button class="journey-arrow" type="button" data-journey-step="-1" aria-label="Previous experience">←</button>
+            <span class="journey-count" id="journey-count" aria-live="polite">01 / 04</span>
+            <button class="journey-arrow" type="button" data-journey-step="1" aria-label="Next experience">→</button>
+          </div>
+          <div class="journey-dots" aria-label="Choose an experience slide">
+            <button class="journey-dot" type="button" data-journey-slide="0" aria-label="Dance" aria-current="true"></button>
+            <button class="journey-dot" type="button" data-journey-slide="1" aria-label="Taekwondo Athlete" aria-current="false"></button>
+            <button class="journey-dot" type="button" data-journey-slide="2" aria-label="Software Engineering Student" aria-current="false"></button>
+            <button class="journey-dot" type="button" data-journey-slide="3" aria-label="Internship Program" aria-current="false"></button>
+          </div>
+        </nav>
+        <section class="gallery-section" aria-label="Vy photo gallery">
+          <div class="gallery-heading"><h3>✦ a little camera roll</h3><small>scroll to explore →</small></div>
+          <div class="photo-rail">
+            <article class="photo-card"><img src="./assets/journey-dance.png" alt="Kolase penampilan dan penghargaan dance Vy" data-viewer-caption="˚ʚ Dance ɞ˚"><span class="gallery-badge">01 · DANCE</span><span class="photo-label">Stage memories</span></article>
+            <article class="photo-card"><img src="./assets/journey-taekwondo.png" alt="Kolase perjalanan taekwondo Vy" data-viewer-caption="˚ʚ Taekwondo Athlete ɞ˚"><span class="gallery-badge">02 · TAEKWONDO</span><span class="photo-label">Discipline in motion</span></article>
+            <article class="photo-card"><img src="./assets/journey-software.png" alt="Foto formal Vy untuk sekolah" data-viewer-caption="˚ʚ Software Engineering Student ɞ˚"><span class="gallery-badge">03 · SOFTWARE ENGINEERING</span><span class="photo-label">Class of 2027</span></article>
+            <article class="photo-card"><img src="./assets/journey-internship-nipro.png" alt="Foto kegiatan magang Vy di Nipro" data-viewer-caption="˚ʚ Internship Program ɞ˚"><span class="gallery-badge">04 · INTERNSHIP</span><span class="photo-label">Learning out there</span></article>
+            <article class="photo-card"><img src="./assets/journey-internship-sagasitas.png" alt="Foto program AI dan Guinness World Records bersama Yayasan Sagasitas" data-viewer-caption="˚ʚ Internship Program ɞ˚"><span class="gallery-badge">05 · INTERNSHIP</span><span class="photo-label">Big ideas, real teamwork</span></article>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="window certificates" id="window-certificates" data-title="⋮ 𝓥𝔂'𝓼 𝓐𝓬𝓱𝓲𝓮𝓿𝓮𝓶𝓮𝓷𝓽" style="top: 10%; left: 14%;" hidden aria-label="Jendela Vy's Achievement">
+      <header class="titlebar">
+        <div class="window-title"><span>🏆</span> ⋮ 𝓥𝔂'𝓼 𝓐𝓬𝓱𝓲𝓮𝓿𝓮𝓶𝓮𝓷𝓽</div>
+        <div class="titlebar-controls">
+          <button class="control minimize" aria-label="Minimalkan">_</button>
+          <button class="control maximize" aria-label="Maksimalkan">□</button>
+          <button class="control close" aria-label="Tutup">×</button>
+        </div>
+      </header>
+      <div class="menubar"><span>File</span><span>View</span><span>Tools</span><span>Help</span></div>
+      <div class="window-content">
+        <div class="folder-stickers" aria-hidden="true">
+          <img class="sticker-butterfly" src="./assets/butterfly.png" alt="">
+          <img class="sticker-heart" src="./assets/fingerprint-heart.png" alt="">
+          <img class="sticker-stars" src="./assets/floating-stars.png" alt="">
+          <img class="sticker-bow" src="./assets/star-bow.png" alt="">
+        </div>
+        <div class="section-heading"><span class="file-icon">📜</span><div><p class="eyebrow">✦ vy's journey</p><h2>Achievement unlocked!</h2></div></div>
+        <p class="muted" style="font-size:12px">✧ Swipe to explore Vy's milestones — click a card for details.</p>
+        <div class="certificate-grid">
+          <button class="certificate" data-cert="✮ Gold Medal Winner at The National Informatics Olympiad — FOSNAS|FOSNAS|National Olympiad|Gold medal achievement in informatics.">
+            <span class="certificate-art"><img src="./assets/achievement-fosnas-informatics.png" alt="Piagam medali emas Olimpiade Informatika FOSNAS"><span class="certificate-number">01 / FOSNAS</span><span class="certificate-type">✦ GOLD MEDAL</span></span><strong>✮ Gold Medal Winner at The National Informatics Olympiad — FOSNAS</strong><small>FOSNAS · National Olympiad</small>
+          </button>
+          <button class="certificate" data-cert="✮ Gold Medal Winner at the National English Language Olympiad — FOSNAS|FOSNAS|National Olympiad|Gold medal achievement in English language.">
+            <span class="certificate-art"><img src="./assets/achievement-fosnas-english.png" alt="Piagam medali emas Olimpiade Bahasa Inggris FOSNAS"><span class="certificate-number">02 / FOSNAS</span><span class="certificate-type">✦ GOLD MEDAL</span></span><strong>✮ Gold Medal Winner at the National English Language Olympiad — FOSNAS</strong><small>FOSNAS · National Olympiad</small>
+          </button>
+          <button class="certificate" data-cert="✮ 1st Place in the Female Cadet Individual Poomsae at the 5th Liga Persada Taekwondo Championship|Liga Persada Taekwondo|5th Championship|First-place achievement in female cadet individual poomsae.">
+            <span class="certificate-art"><img src="./assets/achievement-taekwondo-first.png" alt="Piagam juara pertama poomsae Liga Persada Taekwondo ke-5"><span class="certificate-number">03 / TAEKWONDO</span><span class="certificate-type">✦ 1ST PLACE</span></span><strong>✮ 1st Place in the Female Cadet Individual Poomsae at the 5th Liga Persada Taekwondo Championship</strong><small>Liga Persada Taekwondo · 5th Championship</small>
+          </button>
+          <button class="certificate" data-cert="✮ 2nd Place in the Female Cadet Individual Poomsae at the 4th Liga Persada Taekwondo Championship|Liga Persada Taekwondo|4th Championship|Second-place achievement in female cadet individual poomsae.">
+            <span class="certificate-art"><img src="./assets/achievement-taekwondo-second.png" alt="Piagam juara kedua poomsae Liga Persada Taekwondo ke-4"><span class="certificate-number">04 / TAEKWONDO</span><span class="certificate-type">✦ 2ND PLACE</span></span><strong>✮ 2nd Place in the Female Cadet Individual Poomsae at the 4th Liga Persada Taekwondo Championship</strong><small>Liga Persada Taekwondo · 4th Championship</small>
+          </button>
+          <button class="certificate" data-cert="✮ Completed Kukkiwon's 1st Dan Taekwondo Promotion Test|Kukkiwon|1st Dan|Completed the 1st Dan Taekwondo promotion test.">
+            <span class="certificate-art"><img src="./assets/achievement-kukkiwon-dan.png" alt="Sertifikat Kukkiwon 1st Dan Taekwondo"><span class="certificate-number">05 / KUKKIWON</span><span class="certificate-type">✦ BLACK BELT</span></span><strong>✮ Completed Kukkiwon's 1st Dan Taekwondo Promotion Test</strong><small>Kukkiwon · 1st Dan</small>
+          </button>
+          <button class="certificate" data-cert="✮ AI Ready ASEAN Hour of Code Training — ASEAN Foundation & Google.org|ASEAN Foundation & Google.org|Hour of Code|AI Ready ASEAN coding and artificial intelligence training.">
+            <span class="certificate-art"><img src="./assets/achievement-asean-hour-code.png" alt="Sertifikat AI Ready ASEAN Hour of Code dari ASEAN Foundation"><span class="certificate-number">06 / AI READY ASEAN</span><span class="certificate-type">✦ HOUR OF CODE</span></span><strong>✮ AI Ready ASEAN Hour of Code Training — ASEAN Foundation &amp; Google.org</strong><small>ASEAN Foundation &amp; Google.org</small>
+          </button>
+          <button class="certificate" data-cert="✮ Gemini Certified Student — Google Gemini|Google Gemini|Student Certification|Gemini student certification.">
+            <span class="certificate-art"><img src="./assets/achievement-gemini-student.png" alt="Sertifikat Gemini Certified Student"><span class="certificate-number">07 / GEMINI</span><span class="certificate-type">✦ CERTIFIED STUDENT</span></span><strong>✮ Gemini Certified Student — Google Gemini</strong><small>Google Gemini</small>
+          </button>
+          <button class="certificate" data-cert="✮ AI Basic Learning Class Graduation — Dicoding Academy|Dicoding Academy|AI Basic Learning Class|Graduated from the AI Basic Learning Class.">
+            <span class="certificate-art"><img src="./assets/achievement-dicoding-ai.png" alt="Sertifikat kelulusan kelas Belajar Dasar AI Dicoding Academy"><span class="certificate-number">08 / DICODING</span><span class="certificate-type">✦ CLASS GRADUATE</span></span><strong>✮ AI Basic Learning Class Graduation — Dicoding Academy</strong><small>Dicoding Academy</small>
+          </button>
+          <button class="certificate" data-cert="✮ Basic Digital Marketing Training — GANTAR|GANTAR|Digital Marketing Training|Completed basic digital marketing training.">
+            <span class="certificate-art"><img src="./assets/achievement-gantar-marketing.png" alt="Sertifikat pelatihan Digital Marketing Dasar GANTAR"><span class="certificate-number">09 / GANTAR</span><span class="certificate-type">✦ TRAINING</span></span><strong>✮ Basic Digital Marketing Training — GANTAR</strong><small>GANTAR</small>
+          </button>
+          <button class="certificate" data-cert="✮ Internship Program — PT NIPRO INDONESIA JAYA|PT NIPRO INDONESIA JAYA|Internship Program|Internship experience in Production 1, Engineering & Document Control.">
+            <span class="certificate-art"><img src="./assets/achievement-nipro-internship.png" alt="Sertifikat program magang PT Nipro Indonesia Jaya"><span class="certificate-number">10 / INTERNSHIP</span><span class="certificate-type">✦ PT NIPRO INDONESIA JAYA</span></span><strong>✮ Internship Program — PT NIPRO INDONESIA JAYA</strong><small>PT NIPRO INDONESIA JAYA</small>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="start-menu" id="start-menu" hidden>
+      <div class="start-banner">✿ VY'S DESKTOP</div>
+      <button class="menu-entry" data-open="home"><span>💾</span><span>⋮ 𝓦𝓮𝓵𝓬𝓸𝓶𝓮<small>Back to desktop</small></span></button>
+      <button class="menu-entry" data-open="about"><span>📁</span><span>⋮ 𝓦𝓱𝓸'𝓼 𝓥𝔂?<small>Get to know me</small></span></button>
+      <button class="menu-entry" data-open="experience"><span>🖥️</span><span>⋮ 𝓥𝔂'𝓼 𝓔𝔁𝓹𝓮𝓻𝓲𝓮𝓷𝓬𝓮<small>Dance, taekwondo &amp; more</small></span></button>
+      <button class="menu-entry" data-open="certificates"><span>🏆</span><span>⋮ 𝓥𝔂'𝓼 𝓐𝓬𝓱𝓲𝓮𝓿𝓮𝓶𝓮𝓷𝓽<small>Achievements &amp; learning</small></span></button>
+    </div>
+    <div class="toast" id="toast" role="status" hidden></div>
+    <dialog class="image-viewer" id="image-viewer" aria-label="Pratinjau gambar penuh">
+      <button class="image-viewer-close" type="button" aria-label="Tutup gambar">×</button>
+      <img alt="">
+      <p></p>
+    </dialog>
+
+    <footer class="taskbar">
+      <button class="start-button" id="start-button" aria-expanded="false"><span class="start-mark">✿</span> Start</button>
+      <div class="task-items" id="task-items" aria-label="Jendela terbuka"></div>
+      <div class="system-tray"><span class="wifi">◉</span><span>♫</span><time id="clock">00:00</time></div>
+    </footer>
+  </main>
+  <script>
+    (() => {
+      const windows = [...document.querySelectorAll(".window")];
+      const taskItems = document.getElementById("task-items");
+      const startMenu = document.getElementById("start-menu");
+      const startButton = document.getElementById("start-button");
+      const toast = document.getElementById("toast");
+      let highestZ = 5;
+      let toastTimer;
+
+      function getWindow(name) {
+        return document.getElementById(`window-${name}`);
+      }
+
+      function focusWindow(win) {
+        highestZ += 1;
+        win.style.zIndex = highestZ;
+        document.querySelectorAll(".task-item").forEach(item => {
+          item.classList.toggle("active", item.dataset.target === win.id && !win.classList.contains("minimized"));
+        });
+      }
+
+      function updateTaskbar() {
+        taskItems.replaceChildren();
+        windows.forEach(win => {
+          if (win.hidden) return;
+          const item = document.createElement("button");
+          item.className = `task-item${win.classList.contains("minimized") ? "" : " active"}`;
+          item.type = "button";
+          item.dataset.target = win.id;
+          item.textContent = `▣ ${win.dataset.title}`;
+          item.setAttribute("aria-label", `${win.classList.contains("minimized") ? "Pulihkan" : "Fokus"} ${win.dataset.title}`);
+          item.addEventListener("click", () => {
+            if (win.classList.contains("minimized")) {
+              win.classList.remove("minimized");
+            }
+            focusWindow(win);
+          });
+          taskItems.append(item);
+        });
+      }
+
+      function openWindow(name) {
+        const win = getWindow(name);
+        if (!win) return;
+        win.hidden = false;
+        win.classList.remove("minimized");
+        focusWindow(win);
+        updateTaskbar();
+        startMenu.hidden = true;
+        startButton.setAttribute("aria-expanded", "false");
+      }
+
+      document.querySelectorAll("[data-open]").forEach(button => {
+        button.addEventListener("click", () => openWindow(button.dataset.open));
+      });
+
+      const journeyTrack = document.getElementById("journey-track");
+      const journeySlides = journeyTrack ? [...journeyTrack.querySelectorAll(".journey-slide")] : [];
+      const journeyCount = document.getElementById("journey-count");
+      const journeyDots = [...document.querySelectorAll("[data-journey-slide]")];
+      let activeJourneySlide = 0;
+
+      function showJourneySlide(index) {
+        if (!journeySlides.length) return;
+        activeJourneySlide = (index + journeySlides.length) % journeySlides.length;
+        journeyTrack.style.transform = `translateX(-${activeJourneySlide * 100}%)`;
+        journeySlides.forEach((slide, slideIndex) => {
+          const isInactive = slideIndex !== activeJourneySlide;
+          slide.setAttribute("aria-hidden", String(isInactive));
+          slide.toggleAttribute("inert", isInactive);
+        });
+        journeyDots.forEach((dot, dotIndex) => {
+          dot.setAttribute("aria-current", String(dotIndex === activeJourneySlide));
+        });
+        journeyCount.textContent = `${String(activeJourneySlide + 1).padStart(2, "0")} / ${String(journeySlides.length).padStart(2, "0")}`;
+      }
+
+      document.querySelectorAll("[data-journey-step]").forEach(button => {
+        button.addEventListener("click", () => {
+          showJourneySlide(activeJourneySlide + Number(button.dataset.journeyStep));
+        });
+      });
+      journeyDots.forEach(dot => {
+        dot.addEventListener("click", () => showJourneySlide(Number(dot.dataset.journeySlide)));
+      });
+      const journeyCarousel = document.getElementById("journey-carousel");
+      const imageViewer = document.getElementById("image-viewer");
+      const viewerImage = imageViewer.querySelector("img");
+      const viewerCaption = imageViewer.querySelector("p");
+      document.querySelectorAll(".journey-art img, .photo-card img, .certificate-art img").forEach(image => {
+        image.tabIndex = 0;
+        image.setAttribute("role", "button");
+        image.setAttribute("aria-label", `Buka gambar penuh: ${image.alt || "foto"}`);
+      });
+      document.addEventListener("click", event => {
+        const image = event.target.closest(".journey-art img, .photo-card img, .certificate-art img");
+        if (!image) return;
+        viewerImage.src = image.currentSrc || image.src;
+        viewerImage.alt = image.alt;
+        const achievementCard = image.closest(".certificate");
+        viewerCaption.textContent = image.dataset.viewerCaption || (achievementCard ? achievementCard.querySelector("strong").textContent : image.alt);
+        imageViewer.showModal();
+      });
+      document.addEventListener("keydown", event => {
+        if (event.target.matches(".journey-art img, .photo-card img, .certificate-art img") && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          event.target.click();
+        }
+      });
+      imageViewer.querySelector(".image-viewer-close").addEventListener("click", () => imageViewer.close());
+      imageViewer.addEventListener("click", event => {
+        if (event.target === imageViewer) imageViewer.close();
+      });
+      journeyCarousel.addEventListener("keydown", event => {
+        if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+          event.preventDefault();
+          showJourneySlide(activeJourneySlide + (event.key === "ArrowRight" ? 1 : -1));
+        }
+      });
+      let journeyTouchStart = null;
+      journeyCarousel.addEventListener("pointerdown", event => {
+        if (event.pointerType === "touch") journeyTouchStart = event.clientX;
+      });
+      journeyCarousel.addEventListener("pointerup", event => {
+        if (journeyTouchStart === null) return;
+        const distance = event.clientX - journeyTouchStart;
+        journeyTouchStart = null;
+        if (Math.abs(distance) > 45) showJourneySlide(activeJourneySlide + (distance < 0 ? 1 : -1));
+      });
+      journeyCarousel.addEventListener("pointercancel", () => { journeyTouchStart = null; });
+
+      windows.forEach(win => {
+        win.addEventListener("pointerdown", () => focusWindow(win));
+        win.querySelector(".close").addEventListener("click", event => {
+          event.stopPropagation();
+          win.hidden = true;
+          win.classList.remove("minimized", "maximized");
+          updateTaskbar();
+        });
+        win.querySelector(".minimize").addEventListener("click", event => {
+          event.stopPropagation();
+          win.classList.add("minimized");
+          updateTaskbar();
+        });
+        win.querySelector(".maximize").addEventListener("click", event => {
+          event.stopPropagation();
+          win.classList.toggle("maximized");
+          focusWindow(win);
+        });
+
+        const titlebar = win.querySelector(".titlebar");
+        titlebar.addEventListener("pointerdown", event => {
+          if (event.target.closest(".titlebar-controls") || win.classList.contains("maximized")) return;
+          const rect = win.getBoundingClientRect();
+          const offsetX = event.clientX - rect.left;
+          const offsetY = event.clientY - rect.top;
+          titlebar.setPointerCapture(event.pointerId);
+          const move = moveEvent => {
+            const maxLeft = window.innerWidth - win.offsetWidth;
+            const maxTop = window.innerHeight - 60;
+            win.style.left = `${Math.max(0, Math.min(maxLeft, moveEvent.clientX - offsetX))}px`;
+            win.style.top = `${Math.max(0, Math.min(maxTop, moveEvent.clientY - offsetY))}px`;
+          };
+          const stop = () => {
+            titlebar.removeEventListener("pointermove", move);
+            titlebar.removeEventListener("pointerup", stop);
+            titlebar.removeEventListener("pointercancel", stop);
+          };
+          titlebar.addEventListener("pointermove", move);
+          titlebar.addEventListener("pointerup", stop);
+          titlebar.addEventListener("pointercancel", stop);
+        });
+      });
+
+      startButton.addEventListener("click", () => {
+        startMenu.hidden = !startMenu.hidden;
+        startButton.setAttribute("aria-expanded", String(!startMenu.hidden));
+      });
+      document.addEventListener("pointerdown", event => {
+        if (!startMenu.hidden && !startMenu.contains(event.target) && !startButton.contains(event.target)) {
+          startMenu.hidden = true;
+          startButton.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      function showToast(message) {
+        toast.textContent = message;
+        toast.hidden = false;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => { toast.hidden = true; }, 3200);
+      }
+      document.querySelectorAll("[data-cert]").forEach(card => {
+        card.addEventListener("click", () => {
+          const [title, issuer, date, detail] = card.dataset.cert.split("|");
+          showToast(`${title} · ${issuer} · ${date} — ${detail}`);
+        });
+      });
+
+      function updateClock() {
+        document.getElementById("clock").textContent = new Intl.DateTimeFormat("id-ID", {
+          hour: "2-digit", minute: "2-digit"
+        }).format(new Date());
+      }
+      updateClock();
+      setInterval(updateClock, 30000);
+      openWindow("home");
+    })();
+  </script>
+</body>
+</html>
